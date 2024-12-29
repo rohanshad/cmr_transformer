@@ -48,7 +48,7 @@ Tested on Ubuntu 20.02 and CentOS7
     cat requirements.txt | xargs -n 1 pip install
     ```
 
-3. Download example data: Please reach out to bunkerhill health for access to pre-training data. Please reach out to me over email if you wish to test your models on the University of Pennsylvania Cardiac MRI dataset. [Kaggle](https://www.kaggle.com/c/second-annual-data-science-bowl) and [ACDC](https://www.creatis.insa-lyon.fr/Challenge/acdc/databases.html) Datasets are publicly avaialble. Kaggle data will require conversion to hdf5 via preprocessing scripts supplied, ACDC datasets directly usable in native nifti format. 
+3. Download example data: Please reach out to me over email if you wish to test your models on the University of Pennsylvania Cardiac MRI dataset. [Kaggle](https://www.kaggle.com/c/second-annual-data-science-bowl) and [ACDC](https://www.creatis.insa-lyon.fr/Challenge/acdc/databases.html) Datasets are publicly avaialble. Kaggle data will require conversion to hdf5 via preprocessing scripts supplied, ACDC datasets directly usable in native nifti format. 
 
 
 #### Finetune from pretrained weights on downstream evaluation task
