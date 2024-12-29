@@ -1,0 +1,130 @@
+seed_everything: null
+trainer:
+  logger:
+    class_path: pytorch_lightning.loggers.WandbLogger
+    init_args:
+      dir: /mnt/datastore
+      name: kaggle_test
+      project: mri_clinical_tasks
+  enable_checkpointing: true
+  callbacks: null
+  default_root_dir: null
+  gradient_clip_val: null
+  gradient_clip_algorithm: null
+  num_nodes: 1
+  devices: 1
+  auto_select_gpus: false
+  enable_progress_bar: true
+  overfit_batches: 0.0
+  track_grad_norm: -1
+  check_val_every_n_epoch: 1
+  fast_dev_run: false
+  accumulate_grad_batches: null
+  max_epochs: 100
+  min_epochs: null
+  max_steps: -1
+  min_steps: null
+  max_time: null
+  limit_train_batches: 1.0
+  limit_val_batches: 400
+  limit_test_batches: 1.0
+  limit_predict_batches: 1.0
+  val_check_interval: 1000
+  log_every_n_steps: 50
+  accelerator: gpu
+  strategy: ddp
+  sync_batchnorm: false
+  precision: 32
+  enable_model_summary: true
+  #weights_save_path: null
+  num_sanity_val_steps: 4
+  resume_from_checkpoint: null
+  profiler: null
+  benchmark: false
+  deterministic: false
+  reload_dataloaders_every_n_epochs: 0
+  auto_lr_find: false
+  replace_sampler_ddp: true
+  detect_anomaly: false
+  auto_scale_batch_size: false
+  plugins: null
+  amp_backend: native
+  amp_level: null
+  move_metrics_to_cpu: false
+  multiple_trainloader_mode: max_size_cycle
+model:
+  video_model: mvit
+  pretrained: true
+  video_model_depth: 50
+  checkpoint_path: path_to_checkpoint_here
+  multi_view_strategy: single_model
+  lr: 0.0001
+  wd: 0.0001
+  proj_dim: 512
+  proj_layers: 1
+  dropout: 0.1
+  mode: finetune
+  output_classes: 1
+  multi_instance: true
+  print_attention_maps: false
+data:
+  class_path: data.data_modules.MRI_Data_Module
+  init_args:
+    data_dir: /mnt/datastore/kaggle_datachallenge_mri
+    mri_folder: kaggle_hdf5_folder_here
+    master_csv: test_targets_for_lvef_here.csv
+    period: 1
+    max_length: 50
+    task: regression_mil
+    frames: 16
+    batch_size: 1
+    mean: 0.0
+    sd: 1.0
+    rotation_angle: 20.0
+    shearing_angle: 5.0
+    mri_views: [4CH, 2CH, 3CH, SAX]
+    crop_size: 224
+    debug: false
+    augmentation_scheme: augmix
+    percentage: 1.0
+    cpus: 6
+optimizer:
+  lr: 1.0e-4
+  betas:
+  - 0.9
+  - 0.999
+  eps: 1.0e-08
+  weight_decay: 0.01
+  amsgrad: false
+lr_scheduler:
+  step_size: 10
+  gamma: 0.1
+  last_epoch: -1
+  verbose: false
+checkpoint_callback:
+  dirpath: null
+  filename: null
+  monitor: null
+  verbose: false
+  save_last: null
+  save_top_k: 1
+  save_weights_only: false
+  mode: min
+  auto_insert_metric_name: true
+  every_n_train_steps: 500
+  train_time_interval: null
+  every_n_epochs: null
+  save_on_train_epoch_end: null
+rich_progressbar:
+  refresh_rate: 10
+  leave: false
+  theme:
+    description: white
+    progress_bar: '#6206E0'
+    progress_bar_finished: '#6206E0'
+    progress_bar_pulse: '#6206E0'
+    batch_progress: white
+    time: grey54
+    processing_speed: grey70
+    metrics: white
+ckpt_path: null
