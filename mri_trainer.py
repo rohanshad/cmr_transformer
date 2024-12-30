@@ -35,6 +35,8 @@ from pyaml_env import BaseConfig, parse_config
 import platform
 import time
 
+plt.style.use('classic')
+
 # Read local_config.yaml for local variables 
 device = platform.uname().node.replace('-','_')
 cfg = BaseConfig(parse_config('local_config.yaml'))
@@ -42,11 +44,16 @@ if 'sh' in device:
 	device = 'sherlock'
 elif '211' in device:
 	device = 'cubic'
-ATTN_DIR = getattr(cfg, device).attn_dir
-WANDB_CACHE_DIR = getattr(cfg, device).tmp_dir
-plt.style.use('classic')
-os.makedirs(ATTN_DIR, exist_ok = True)
-
+try:
+	ATTN_DIR = getattr(cfg, device).attn_dir
+	WANDB_CACHE_DIR = getattr(cfg, device).tmp_dir
+	
+	os.makedirs(ATTN_DIR, exist_ok = True)
+except:
+	print('------------------------------------')
+	print(f"WARNING: local_config.yaml is not configured correctly, please see README")
+	print(f"ATTN_DIR and WANDB_CACHE_DIR not correctly configured.")
+	print('------------------------------------')
 
 class Cardiac_MRI_Net(LightningModule):
 	'''

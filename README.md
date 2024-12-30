@@ -29,7 +29,7 @@ Researchers may have access to the UK BioBank and wish to use our models on CMR 
 
 #### Download Weights
 
-Weights for the contrastive pretrained vision encoders are available here: [placeholder link]()
+Weights for our pretrained CMR encoders are available on Huggingface for non-commercial use: https://huggingface.co/rohanshad/cmr_c0.1. 
 
 #### Install Dependencies 
 
@@ -50,17 +50,22 @@ Tested on Ubuntu 20.02 and CentOS7
 
 3. Download example data: Please reach out to me over email if you wish to test your models on the University of Pennsylvania Cardiac MRI dataset. [Kaggle](https://www.kaggle.com/c/second-annual-data-science-bowl) and [ACDC](https://www.creatis.insa-lyon.fr/Challenge/acdc/databases.html) Datasets are publicly avaialble. Kaggle data will require conversion to hdf5 via preprocessing scripts supplied, ACDC datasets directly usable in native nifti format. 
 
+#### Evaluate on ACDC Data
+```
+python mri_trainer.py validate --config configs/acdc_evaluation.yaml
+```
+
 
 #### Finetune from pretrained weights on downstream evaluation task
 
 ```
-python mri_trainer.py fit --config finetune_config.yaml
+python mri_trainer.py fit --config configs/finetune_config.yaml
 ```
 
 #### Evaluate pretrained weights on downstream evaluation task (test dataset)
 
 ```
-python mri_trainer.py test --config eval_config.yaml
+python mri_trainer.py test --config configs/eval_config.yaml
 ```
 
  

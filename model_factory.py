@@ -16,8 +16,13 @@ if 'sh' in device:
 	device = 'sherlock'
 elif '211' in device:
 	device = 'cubic'
-PRETRAIN_WEIGHTS = getattr(cfg, device).pretrain_dir
-
+try:
+	PRETRAIN_WEIGHTS = getattr(cfg, device).pretrain_dir
+except:
+	print('------------------------------------')
+	print(f"WARNING: local_config.yaml is not configured correctly, please see README")
+	print(f"Unable to load Kinetics pretrained checkpoint for mvit")
+	print('------------------------------------')
 
 def resnet_builder(model_depth: int=50, pretrained:bool=True, n_classes: int=700):
 	'''
