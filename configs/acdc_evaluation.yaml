@@ -68,6 +68,7 @@ model:
   output_classes: 1
   multi_instance: false
   print_attention_maps: false
+  task: acdc
 data:
   class_path: data.data_modules.ACDC_Data_Module
   init_args:

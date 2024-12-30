@@ -155,14 +155,20 @@ class Cardiac_MRI_Net(LightningModule):
 			'''
 
 		else:
-			video_emb = self.model(video_batch)
-		
-		logits, probs, Y_hat, attn_raw, results_dict = self.classifier_head(video_emb, self.task)
+			video_emb = self.model(video_batch)	
+			logits, probs, Y_hat, attn_raw, results_dict = self.classifier_head(video_emb, self.task)
 
 		if return_mil_attn == True:
 			return logits, probs, Y_hat, video_emb, attn_raw
+
 		elif generate_attnmaps == True:
+			if self.task == 'acdc':
+				logits = None
+				probs = None
+				Y_hat = None
+
 			return logits, probs, Y_hat, video_emb, attn_list
+
 		else:
 			return logits, probs, Y_hat, video_emb
 
@@ -236,22 +242,24 @@ class Cardiac_MRI_Net(LightningModule):
 		outputs.clear()
 
 	def validation_step(self, batch, batch_idx):
-		inputs, views, target, filenames = batch
+		
+		#Defines batch elements
+		if self.task == 'acdc':
+			video, target, filenames = batch
+		else:
+			inputs, views, target, filenames = batch
+		
+		# Defines label logic
 		if 'regression_mil' in self.task:
 			labels = torch.unsqueeze(target, dim=0).float()	
 
 		elif 'classification_mil' in self.task:
-			#labels = torch.squeeze(target, dim=0).int()
 			labels = torch.unsqueeze(target, dim=0).int()
-			# print(f'LABELS: {labels}')
-			# print(f'LABELS SHAPE: {labels.shape}')
-			# print(f'INPUTS: {inputs.shape}')
 
 		else:
 			labels = torch.unsqueeze(target, dim=1).float()	
 
 		if self.task == 'acdc': 
-			video, target, filenames = batch
 			_, _, _, video_emb, attn_list = self.forward(video, generate_attnmaps=True)
 			self._hdf5_writer(video, attn_list, None, filenames)		
 			print('Exported attention maps from', len(attn_list), 'layers')
@@ -261,12 +269,7 @@ class Cardiac_MRI_Net(LightningModule):
 
 		else:
 			# Uses the multi-instance attention classifier	
-			logits, probs, Y_hat, embeddings, attn_list = self.forward(inputs, return_mil_attn=True)
-			
-			# print(f'views: {views}')
-			# print(f'raw_attn: {attn_list.cpu().detach().numpy()}')
-			# print(f'softmax_attn: {nn.functional.softmax(attn_list, dim=1).cpu().detach().numpy()}')
-
+			logits, probs, Y_hat, embeddings, attn_list = self.forward(inputs, return_mil_attn=True)	
 
 			if self.task == 'classification' or self.task == 'classification_mil':
 				val_loss = self.classif_loss(logits, labels.float())

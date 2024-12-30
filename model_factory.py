@@ -21,7 +21,7 @@ try:
 except:
 	print('------------------------------------')
 	print(f"WARNING: local_config.yaml is not configured correctly, please see README")
-	print(f"Unable to load Kinetics pretrained checkpoint for mvit")
+	print(f"Will attempt to load Kinetics pretrained checkpoint for mvit")
 	print('------------------------------------')
 
 def resnet_builder(model_depth: int=50, pretrained:bool=True, n_classes: int=700):
