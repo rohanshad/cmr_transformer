@@ -23,17 +23,27 @@ patient_id
     ├── 3CH	{data: 4d array (c, f, h, w)} {attr: total images, slice frame index}
 ```
 
-#### Preprocessing UK BioBank Data
+#### Repository Contents
+This repository contains template code for finetuning and evaluation, in addition contains all model classes required to load our weights for use in your own projects. To use this repository as is for finetuning on your own datasets, you will need to use [Wandb](https://wandb.ai/site/) for experiment tracking, or make appropriate changes to use [Tensorboard](https://www.tensorflow.org/tensorboard). The repository also relies on a `local_config.yaml` (not included) file to set some variables (eg: `PRETRAIN_WEIGHTS` or `ATTN_DIR`. This format of this file is as follows: 
 
-Researchers may have access to the UK BioBank and wish to use our models on CMR data from the UK BioBank. We use scripts avaialble in our [cmr_toolkit](https://github.com/rohanshad/cmr_toolkit) to prepare and pre-process the data. We first run the entire UK BioBank data directory through `tar_compress.py` to restructure data from each scan into a single parent level tarfile unique for each scan. We use the `preprocess_mri.py` and then `build_dataset.py` scripts to build the final hdf5 datastore. Instructions in the `cmr_toolkit` repository. 
+```
+# Device specific options
+your_computer_name:
+  tmp_dir: 'some/temp/dir'
+  pretrain_dir: '/some/pretrain/dir'
+  attn_dir: 'some/dir/attention_maps'
+```
+
+Using the repo without a `local_config.yaml` file is possible if you hard code those variables in `model_factory.py` and `mri_trainer.py`
+
 
 #### Download Weights
 
-Weights for our pretrained CMR encoders are available on Huggingface for non-commercial use: https://huggingface.co/rohanshad/cmr_c0.1. 
+Weights for our pretrained CMR encoders are available on Huggingface for non-commercial use (CC-BY-NC 4.0): https://huggingface.co/rohanshad/cmr_c0.1. 
 
 #### Install Dependencies 
 
-Tested on Ubuntu 20.02 and CentOS7 
+Tested with CUDA on Ubuntu 20.02, 24.04 and CentOS7. 
 
 1. Create [new conda environment](https://anaconda.org) using python version 3.9
 
@@ -43,29 +53,52 @@ Tested on Ubuntu 20.02 and CentOS7
     ```
   
 2. Install dependencies
+    ```
+    cat requirements.txt | xargs -n 1 pip install --force-reinstall
+    pip install torch==1.11.0+cu113 --extra-index-url https://download.pytorch.org/whl/cu113 --force
+    ```
 
-    ```
-    cat requirements.txt | xargs -n 1 pip install
-    ```
+    Specific torch download links for cuda enabled pytorch versions. Codebase not tested with torch > 1.11
 
 3. Download example data: Please reach out to me over email if you wish to test your models on the University of Pennsylvania Cardiac MRI dataset. [Kaggle](https://www.kaggle.com/c/second-annual-data-science-bowl) and [ACDC](https://www.creatis.insa-lyon.fr/Challenge/acdc/databases.html) Datasets are publicly avaialble. Kaggle data will require conversion to hdf5 via preprocessing scripts supplied, ACDC datasets directly usable in native nifti format. 
+
+#### Preprocessing UK BioBank Data
+
+Researchers may have access to the UK BioBank and wish to use our models on CMR data from the UK BioBank. We use scripts avaialble in our [cmr_toolkit](https://github.com/rohanshad/cmr_toolkit) to prepare and pre-process the data. We first run the entire UK BioBank data directory through `tar_compress.py` to restructure data from each scan into a single parent level tarfile unique for each scan. We use the `preprocess_mri.py` and then `build_dataset.py` scripts to build the final hdf5 datastore. Instructions in the `cmr_toolkit` repository. 
 
 #### Evaluate on ACDC Data
 ```
 python mri_trainer.py validate --config configs/acdc_evaluation.yaml
 ```
 
-
-#### Finetune from pretrained weights on downstream evaluation task
+#### Example Finetune from pretrained weights on downstream evaluation task
 
 ```
 python mri_trainer.py fit --config configs/finetune_config.yaml
 ```
 
-#### Evaluate pretrained weights on downstream evaluation task (test dataset)
+#### Example Evaluate pretrained weights on downstream evaluation task (test dataset)
 
 ```
 python mri_trainer.py test --config configs/eval_config.yaml
 ```
+
+
+### Citation
+If you use this codebase, or otherwise found our work valuable, please cite:
+```
+@misc{shad2023generalizabledeeplearningcardiac,
+      title={A Generalizable Deep Learning System for Cardiac MRI}, 
+      author={Rohan Shad and Cyril Zakka and Dhamanpreet Kaur and Robyn Fong and Ross Warren Filice and John Mongan and Kimberly Kalianos and Nishith Khandwala and David Eng and Matthew Leipzig and Walter Witschey and Alejandro de Feria and Victor Ferrari and Euan Ashley and Michael A. Acker and Curtis Langlotz and William Hiesinger},
+      year={2023},
+      eprint={2312.00357},
+      archivePrefix={arXiv},
+      primaryClass={eess.IV},
+      url={https://arxiv.org/abs/2312.00357}, 
+}
+```
+
+
+
 
  

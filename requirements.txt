@@ -181,7 +181,6 @@ tifffile==2021.2.1
 tokenizers==0.10.1
 toml==0.10.2
 toolz==0.11.1
-torch==1.11.0+cu113 --extra-index-url https://download.pytorch.org/whl/cu113
 torchmetrics==1.0.1
 torchsummary==1.5.1
 torchtext==0.4.0
@@ -215,3 +214,4 @@ matplotlib==3.3.4
 transformers==4.6.0
 numpy==1.25
 protobuf==3.20.1
+torch==1.11.0+cu113 --extra-index-url https://download.pytorch.org/whl/cu113
