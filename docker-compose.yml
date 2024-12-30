@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  mri_trainer:
+    image: python:3.9-slim
+    working_dir: /app
+    volumes:
+      - .:/app
+      - /path/to/data:/mnt/datastore/acdc_labelled_sax  # Replace /path/to/data with the actual path to your data
+    environment:
+      - PYTHONUNBUFFERED=1
+    command: python mri_trainer.py --validate --config configs/acdc_evaluation.yaml
