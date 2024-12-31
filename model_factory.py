@@ -20,8 +20,9 @@ try:
 	PRETRAIN_WEIGHTS = getattr(cfg, device).pretrain_dir
 except:
 	print('------------------------------------')
-	print(f"WARNING: local_config.yaml is not configured correctly, please see README")
-	print(f"Will attempt to load Kinetics pretrained checkpoint for mvit")
+	print(f"WARNING: local_config.yaml is not configured correctly, please see README:")
+	print(f'Your device name: {device}, use this to create local_config.yaml')
+	print(f"Will attempt to load Kinetics pretrained checkpoint for mvit through cache dir")
 	print('------------------------------------')
 
 def resnet_builder(model_depth: int=50, pretrained:bool=True, n_classes: int=700):
