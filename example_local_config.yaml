@@ -1,0 +1,4 @@
+your_computer_name:
+  tmp_dir: 'some/temp/dir'
+  pretrain_dir: '/some/pretrain/dir'
+  attn_dir: 'some/dir/attention_maps'
