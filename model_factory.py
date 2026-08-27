@@ -8,6 +8,7 @@ from torch import nn
 from arch import resnet, mvit
 from pyaml_env import BaseConfig, parse_config
 import platform
+import bcolors
 
 # Read local_config.yaml for local variables 
 device = platform.uname().node.replace('-','_')
@@ -366,17 +367,21 @@ def load_contrastive_pretrained_weights(input_model, checkpoint_path):
 
 	try:
 		# 1. filter out unnecessary keys
-		video_encoder_dict = {k.strip('model.'): v for k, v in pretrained_state_dict.items() if k.strip('model.') in model_dict}
+		video_encoder_dict = {k.removeprefix('model.'): v for k, v in pretrained_state_dict.items() if k.removeprefix('model.') in model_dict}
 		# 2. overwrite entries in the existing state dict
 		model_dict.update(video_encoder_dict) 
 		# 3. load the new state dict
 		model.load_state_dict(model_dict)
 
-		print('Successfully loaded weights!')
+		if len(video_encoder_dict) == 0:
+			print(f'{bcolors.ERR}WARNING: No matching keys found in checkpoint — model weights unchanged.{bcolors.ENDC}')
+		else:
+			print(f'{bcolors.OK}Successfully loaded {len(video_encoder_dict)} weight tensors; expected: 377.{bcolors.ENDC}')
 
 	except Exception as ex:
-		print(ex)
-		
+		print(f'{bcolors.ERR}WARNING: load_contrastive_pretrained_weights failed — {ex}{bcolors.ENDC}')
+		print(f'{bcolors.ERR}Model weights unchanged. Check checkpoint path and source_stage.{bcolors.ENDC}')
+
 	return model
 
 def load_finetuned_mri_network_checkpoints(video_encoder, classifier_head, checkpoint_path):
@@ -392,7 +397,7 @@ def load_finetuned_mri_network_checkpoints(video_encoder, classifier_head, check
 
 	try:
 		# 1. Load weights onto video and classifier models
-		pretrained_state_dict = {k.strip('model.'): v for k, v in pretrained_state_dict.items()}
+		pretrained_state_dict = {k.removeprefix('model.'): v for k, v in pretrained_state_dict.items()}
 
 		video_encoder_dict.update(pretrained_state_dict)
 		classifier_head_dict.update(pretrained_state_dict)

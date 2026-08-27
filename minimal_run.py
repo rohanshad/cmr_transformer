@@ -6,7 +6,7 @@ import torch
 import os 
 import model_factory 
 from huggingface_hub import hf_hub_download
-from torchvision.transforms import v2
+from torchvision import transforms
 
 # Cuda if able #
 if torch.cuda.is_available():
@@ -29,7 +29,7 @@ model.to(device)
 # Input dims: [B, 3, 16, 224, 224]
 
 ## If using transforms on raw dicom or hdf data:
-# val_transforms = v2.Compose([v2.Resize(size=224+20),v2.CenterCrop(size=224),])
+# val_transforms = transforms.Compose([transforms.Resize(size=224+20),transforms.CenterCrop(size=224),])
 
 # Demo input for show:
 demo_input = torch.rand([1, 3, 16, 224, 224])

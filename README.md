@@ -55,8 +55,8 @@ This will download the checkpoint, load the MViT encoder, and run a forward pass
 If you're working from raw DICOM data, run it through [cmr_toolkit](https://github.com/rohanshad/cmr_toolkit) first to produce HDF5 files, then apply spatial transforms before passing to the model:
 
 ```python
-from torchvision.transforms import v2
-val_transforms = v2.Compose([v2.Resize(size=244), v2.CenterCrop(size=224)])
+from torchvision import transforms
+val_transforms = transforms.Compose([transforms.Resize(size=244), transforms.CenterCrop(size=224)])
 ```
 
 #### Install Dependencies
